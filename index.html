@@ -4,363 +4,120 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="ãããã¨ãªã¹ã">
+  <meta name="apple-mobile-web-app-title" content="やることリスト">
   <meta name="theme-color" content="#2d6a4f">
-  <title>ãããã¨ãªã¹ã</title>
+  <title>やることリスト</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
     :root {
-      --bg: #f5f4f0;
-      --surface: #ffffff;
-      --primary: #2d6a4f;
-      --primary-light: #52b788;
-      --danger: #c0392b;
-      --text: #1a1a1a;
-      --text-muted: #888;
-      --border: #e0ddd5;
-      --done-bg: #f0f7f4;
-      --shadow: 0 2px 12px rgba(0,0,0,0.08);
-      --radius: 12px;
+      --bg: #f5f4f0; --surface: #ffffff; --primary: #2d6a4f; --primary-light: #52b788;
+      --danger: #c0392b; --text: #1a1a1a; --text-muted: #888; --border: #e0ddd5;
+      --done-bg: #f0f7f4; --shadow: 0 2px 12px rgba(0,0,0,0.08); --radius: 12px;
     }
-
-    body {
-      font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Noto Sans JP', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-    }
-
-    header {
-      background: var(--primary);
-      color: white;
-      padding: 14px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    }
-
+    body { font-family: 'Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic','Noto Sans JP',sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+    header { background: var(--primary); color: white; padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
     header h1 { font-size: 18px; font-weight: 700; }
-
-    .sync-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: #a8e6c0;
-      display: inline-block;
-      margin-right: 5px;
-      animation: blink 2s infinite;
-    }
+    .sync-dot { width: 8px; height: 8px; border-radius: 50%; background: #a8e6c0; display: inline-block; margin-right: 5px; animation: blink 2s infinite; }
     .sync-dot.offline { background: #f87171; animation: none; }
-
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
     #syncLabel { font-size: 12px; opacity: 0.85; display: flex; align-items: center; }
-
-    .filter-bar {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      padding: 0 8px;
-    }
-
-    .filter-tab {
-      padding: 11px 10px;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-muted);
-      cursor: pointer;
-      border-bottom: 2px solid transparent;
-      white-space: nowrap;
-    }
-
+    .filter-bar { background: var(--surface); border-bottom: 1px solid var(--border); display: flex; padding: 0 8px; }
+    .filter-tab { padding: 11px 10px; font-size: 13px; font-weight: 600; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; }
     .filter-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
-
-    .filter-tab .cnt {
-      display: inline-block;
-      background: var(--bg);
-      border-radius: 10px;
-      padding: 1px 6px;
-      font-size: 11px;
-      margin-left: 4px;
-    }
-
+    .filter-tab .cnt { display: inline-block; background: var(--bg); border-radius: 10px; padding: 1px 6px; font-size: 11px; margin-left: 4px; }
     .filter-tab.active .cnt { background: var(--primary); color: white; }
-
     .container { max-width: 640px; margin: 0 auto; padding: 14px; }
-
-    /* Add form */
-    .add-form {
-      background: var(--surface);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 14px;
-      margin-bottom: 14px;
-    }
-
+    .add-form { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); padding: 14px; margin-bottom: 14px; }
     .add-row { display: flex; gap: 8px; margin-bottom: 10px; }
-
-    .add-row input {
-      flex: 1;
-      border: 1.5px solid var(--border);
-      border-radius: 8px;
-      padding: 11px 14px;
-      font-size: 15px;
-      font-family: inherit;
-      font-weight: 600;
-      outline: none;
-      background: var(--bg);
-    }
-
+    .add-row input { flex: 1; border: 1.5px solid var(--border); border-radius: 8px; padding: 11px 14px; font-size: 15px; font-family: inherit; font-weight: 600; outline: none; background: var(--bg); }
     .add-row input:focus { border-color: var(--primary-light); background: white; }
-
-    .add-btn {
-      background: var(--primary);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 11px 20px;
-      font-size: 22px;
-      cursor: pointer;
-      flex-shrink: 0;
-      font-family: inherit;
-    }
-
-    .detail-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-
-    .detail-grid select,
-    .detail-grid input[type="date"],
-    .detail-grid input[type="text"] {
-      width: 100%;
-      border: 1.5px solid var(--border);
-      border-radius: 8px;
-      padding: 8px 10px;
-      font-size: 13px;
-      font-family: inherit;
-      font-weight: 600;
-      background: var(--bg);
-      outline: none;
-    }
-
-    /* Progress */
-    .progress-card {
-      background: var(--surface);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 13px 16px;
-      margin-bottom: 14px;
-    }
-
-    .progress-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 7px;
-    }
-
+    .add-btn { background: var(--primary); color: white; border: none; border-radius: 8px; padding: 11px 20px; font-size: 22px; cursor: pointer; flex-shrink: 0; font-family: inherit; }
+    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .detail-grid select, .detail-grid input[type="date"], .detail-grid input[type="text"] { width: 100%; border: 1.5px solid var(--border); border-radius: 8px; padding: 8px 10px; font-size: 13px; font-family: inherit; font-weight: 600; background: var(--bg); outline: none; }
+    .progress-card { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); padding: 13px 16px; margin-bottom: 14px; }
+    .progress-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 7px; }
     .progress-label { font-size: 13px; font-weight: 600; color: var(--text-muted); }
-    .progress-pct   { font-size: 18px; font-weight: 700; color: var(--primary); }
-
-    .progress-bar {
-      height: 7px;
-      background: var(--bg);
-      border-radius: 99px;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
-      border-radius: 99px;
-      transition: width 0.4s ease;
-    }
-
-    /* Category badges */
-    .cat-badge {
-      display: inline-block;
-      font-size: 11px;
-      font-weight: 600;
-      border-radius: 5px;
-      padding: 2px 7px;
-      margin-right: 5px;
-    }
-    .cat-ä»äº    { background: #dbeafe; color: #1d4ed8; }
-    .cat-åäºº    { background: #fce7f3; color: #9d174d; }
-    .cat-è²·ãç©  { background: #fef9c3; color: #854d0e; }
-    .cat-é£çµ¡    { background: #d1fae5; color: #065f46; }
-    .cat-ãã®ä»  { background: #f3e8ff; color: #6b21a8; }
-
-    /* Priority dot */
+    .progress-pct { font-size: 18px; font-weight: 700; color: var(--primary); }
+    .progress-bar { height: 7px; background: var(--bg); border-radius: 99px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%); border-radius: 99px; transition: width 0.4s ease; }
+    .cat-badge { display: inline-block; font-size: 11px; font-weight: 600; border-radius: 5px; padding: 2px 7px; margin-right: 5px; }
+    .cat-仕事 { background: #dbeafe; color: #1d4ed8; }
+    .cat-個人 { background: #fce7f3; color: #9d174d; }
+    .cat-買い物 { background: #fef9c3; color: #854d0e; }
+    .cat-連絡 { background: #d1fae5; color: #065f46; }
+    .cat-その他 { background: #f3e8ff; color: #6b21a8; }
     .pri-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
     .pri-high { background: #ef4444; }
-    .pri-mid  { background: #f59e0b; }
-    .pri-low  { background: #94a3b8; }
-
-    /* Section */
-    .section-label {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--text-muted);
-      letter-spacing: 0.1em;
-      margin: 18px 0 8px 4px;
-    }
-
+    .pri-mid { background: #f59e0b; }
+    .pri-low { background: #94a3b8; }
+    .section-label { font-size: 11px; font-weight: 700; color: var(--text-muted); letter-spacing: 0.1em; margin: 18px 0 8px 4px; }
     .todo-list { display: flex; flex-direction: column; gap: 8px; }
-
-    .todo-item {
-      background: var(--surface);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 13px 14px;
-      display: flex;
-      align-items: flex-start;
-      gap: 11px;
-    }
-
+    .todo-item { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); padding: 13px 14px; display: flex; align-items: flex-start; gap: 11px; }
     .todo-item.done { background: var(--done-bg); box-shadow: none; }
     .todo-item.done .todo-text { text-decoration: line-through; color: var(--text-muted); }
-
-    .chk-btn {
-      width: 24px; height: 24px;
-      border-radius: 50%;
-      border: 2px solid var(--border);
-      background: white;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13px;
-      flex-shrink: 0;
-      margin-top: 1px;
-      transition: all 0.15s;
-    }
-
-    .todo-item.done .chk-btn {
-      background: var(--primary);
-      border-color: var(--primary);
-      color: white;
-    }
-
+    .chk-btn { width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--border); background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; margin-top: 1px; transition: all 0.15s; }
+    .todo-item.done .chk-btn { background: var(--primary); border-color: var(--primary); color: white; }
     .todo-body { flex: 1; min-width: 0; }
     .todo-text { font-size: 15px; font-weight: 600; line-height: 1.4; word-break: break-word; }
     .todo-meta { display: flex; align-items: center; gap: 6px; margin-top: 5px; flex-wrap: wrap; }
     .todo-date { font-size: 12px; color: var(--text-muted); }
     .todo-date.overdue { color: var(--danger); font-weight: 700; }
     .todo-memo { font-size: 12px; color: var(--text-muted); margin-top: 3px; font-style: italic; font-weight: normal; }
-
-    .del-btn {
-      background: none;
-      border: none;
-      color: #ccc;
-      cursor: pointer;
-      font-size: 19px;
-      padding: 0 2px;
-      flex-shrink: 0;
-      line-height: 1;
-    }
-
+    .del-btn { background: none; border: none; color: #ccc; cursor: pointer; font-size: 19px; padding: 0 2px; flex-shrink: 0; line-height: 1; }
     .del-btn:active { color: var(--danger); }
-
-    /* Done section toggle */
-    .done-toggle {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-muted);
-      padding: 12px 4px 6px;
-      user-select: none;
-    }
-
-    .clear-done-btn {
-      margin-left: auto;
-      font-size: 12px;
-      color: var(--danger);
-      background: none;
-      border: 1px solid currentColor;
-      border-radius: 5px;
-      padding: 3px 9px;
-      cursor: pointer;
-      font-family: inherit;
-      font-weight: 600;
-    }
-
-    .empty {
-      text-align: center;
-      padding: 48px 20px;
-      color: var(--text-muted);
-      font-size: 14px;
-    }
-
+    .done-toggle { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--text-muted); padding: 12px 4px 6px; user-select: none; }
+    .clear-done-btn { margin-left: auto; font-size: 12px; color: var(--danger); background: none; border: 1px solid currentColor; border-radius: 5px; padding: 3px 9px; cursor: pointer; font-family: inherit; font-weight: 600; }
+    .empty { text-align: center; padding: 48px 20px; color: var(--text-muted); font-size: 14px; }
     .empty .emoji { font-size: 38px; margin-bottom: 10px; }
   </style>
 </head>
 <body>
-
 <header>
-  <h1>ð ãããã¨ãªã¹ã</h1>
-  <div id="syncLabel"><span class="sync-dot offline" id="syncDot"></span><span id="syncText">æ¥ç¶ä¸­â¦</span></div>
+  <h1>✅ やることリスト</h1>
+  <div id="syncLabel"><span class="sync-dot offline" id="syncDot"></span><span id="syncText">接続中…</span></div>
 </header>
-
 <div class="filter-bar">
-  <div class="filter-tab active" data-f="all"     onclick="setFilter('all')">ãã½ã¦<span class="cnt" id="cnt-all">0</span></div>
-  <div class="filter-tab"        data-f="today"   onclick="setFilter('today')">ä»æ¥<span class="cnt" id="cnt-today">0</span></div>
-  <div class="filter-tab"        data-f="pending" onclick="setFilter('pending')">æªå®äº<span class="cnt" id="cnt-pending">0</span></div>
-  <div class="filter-tab"        data-f="done"    onclick="setFilter('done')">å®äº<span class="cnt" id="cnt-done">0</span></div>
+  <div class="filter-tab active" data-f="all" onclick="setFilter('all')">すべて<span class="cnt" id="cnt-all">0</span></div>
+  <div class="filter-tab" data-f="today" onclick="setFilter('today')">今日<span class="cnt" id="cnt-today">0</span></div>
+  <div class="filter-tab" data-f="pending" onclick="setFilter('pending')">未完了<span class="cnt" id="cnt-pending">0</span></div>
+  <div class="filter-tab" data-f="done" onclick="setFilter('done')">完了<span class="cnt" id="cnt-done">0</span></div>
 </div>
-
 <div class="container">
-
   <div class="add-form">
     <div class="add-row">
-      <input type="text" id="newTask" placeholder="ãããã¨ãè¿½å â¦">
-      <button class="add-btn" onclick="addTask()">ï¼</button>
+      <input type="text" id="newTask" placeholder="やることを追加…">
+      <button class="add-btn" onclick="addTask()">＋</button>
     </div>
     <div class="detail-grid">
       <select id="newCat">
-        <option value="ä»äº">ð¼ ä»äº</option>
-        <option value="åäºº">ð  åäºº</option>
-        <option value="è²·ãç©">ð è²·ãç©</option>
-        <option value="é£çµ¡">ð é£çµ¡</option>
-        <option value="ãã®ä»" selected>ð ãã®ä»</option>
+        <option value="仕事">💼 仕事</option>
+        <option value="個人">🏠 個人</option>
+        <option value="買い物">🛒 買い物</option>
+        <option value="連絡">📞 連絡</option>
+        <option value="その他" selected>📌 その他</option>
       </select>
       <select id="newPri">
-        <option value="high">ð´ é«</option>
-        <option value="mid" selected>ð¡ ä¸­</option>
-        <option value="low">â« ä½</option>
+        <option value="high">🔴 高</option>
+        <option value="mid" selected>🟡 中</option>
+        <option value="low">⚫ 低</option>
       </select>
       <input type="date" id="newDue">
-      <input type="text" id="newMemo" placeholder="ã¡ã¢ï¼ä»»æï¼">
+      <input type="text" id="newMemo" placeholder="メモ（任意）">
     </div>
   </div>
-
   <div class="progress-card">
     <div class="progress-header">
-      <span class="progress-label">é²æ</span>
+      <span class="progress-label">進捗</span>
       <span class="progress-pct" id="progPct">0%</span>
     </div>
-    <div class="progress-bar">
-      <div class="progress-fill" id="progFill" style="width:0%"></div>
-    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
   </div>
-
   <div id="listWrap"></div>
-
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, onValue, push, update, remove }
-  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getDatabase, ref, onValue, push, update, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBkDTaA0WjCa6xzMaYQTPuG762sMLSi52o",
@@ -373,50 +130,44 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const db  = getDatabase(app);
+const db = getDatabase(app);
 const todosRef = ref(db, "todos");
-
 let todos = {};
 let currentFilter = 'all';
 let doneOpen = true;
 
-// ãªã¢ã«ã¿ã¤ã åæ
 onValue(todosRef, snap => {
   todos = snap.val() || {};
-  document.getElementById('syncDot').className  = 'sync-dot';
-  document.getElementById('syncText').textContent = 'ãªã¢ã«ã¿ã¤ã åæä¸­';
+  document.getElementById('syncDot').className = 'sync-dot';
+  document.getElementById('syncText').textContent = 'リアルタイム同期中';
   render();
 }, err => {
-  document.getElementById('syncDot').className  = 'sync-dot offline';
-  document.getElementById('syncText').textContent = 'æ¥ç¶ã¨ã©ã¼';
+  document.getElementById('syncDot').className = 'sync-dot offline';
+  document.getElementById('syncText').textContent = '接続エラー';
 });
 
-// ââ Add ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 window.addTask = function() {
   const text = document.getElementById('newTask').value.trim();
   if (!text) return;
   push(todosRef, {
     text,
-    category:  document.getElementById('newCat').value,
-    priority:  document.getElementById('newPri').value,
-    due:       document.getElementById('newDue').value || null,
-    memo:      document.getElementById('newMemo').value.trim() || null,
-    done:      false,
+    category: document.getElementById('newCat').value,
+    priority: document.getElementById('newPri').value,
+    due: document.getElementById('newDue').value || null,
+    memo: document.getElementById('newMemo').value.trim() || null,
+    done: false,
     createdAt: Date.now()
   });
-  document.getElementById('newTask').value  = '';
-  document.getElementById('newMemo').value  = '';
-  document.getElementById('newDue').value   = '';
+  document.getElementById('newTask').value = '';
+  document.getElementById('newMemo').value = '';
+  document.getElementById('newDue').value = '';
   document.getElementById('newTask').focus();
 };
 
 window.toggleDone = function(id) {
   const t = todos[id];
   if (!t) return;
-  update(ref(db, 'todos/' + id), {
-    done:   !t.done,
-    doneAt: !t.done ? Date.now() : null
-  });
+  update(ref(db, 'todos/' + id), { done: !t.done, doneAt: !t.done ? Date.now() : null });
 };
 
 window.deleteTask = function(id) {
@@ -424,15 +175,13 @@ window.deleteTask = function(id) {
 };
 
 window.clearDone = function() {
-  if (!confirm('å®äºæ¸ã¿ããã¹ã¦åé¤ãã¾ããï¼')) return;
+  if (!confirm('完了済みをすべて削除しますか？')) return;
   Object.keys(todos).forEach(id => { if (todos[id].done) remove(ref(db, 'todos/' + id)); });
 };
 
 window.setFilter = function(f) {
   currentFilter = f;
-  document.querySelectorAll('.filter-tab').forEach(el => {
-    el.classList.toggle('active', el.dataset.f === f);
-  });
+  document.querySelectorAll('.filter-tab').forEach(el => el.classList.toggle('active', el.dataset.f === f));
   render();
 };
 
@@ -441,35 +190,28 @@ window.toggleDoneSection = function() {
   const el = document.getElementById('doneSect');
   const ar = document.getElementById('doneArrow');
   if (el) el.style.display = doneOpen ? '' : 'none';
-  if (ar) ar.textContent   = doneOpen ? 'â¼' : 'â¶';
+  if (ar) ar.textContent = doneOpen ? '▼' : '▶';
 };
 
-// ââ Render âââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function render() {
   const todayStr = new Date().toISOString().slice(0,10);
   const list = Object.keys(todos).map(id => Object.assign({ id }, todos[id]));
-
-  const pending      = list.filter(t => !t.done);
-  const done         = list.filter(t =>  t.done);
+  const pending = list.filter(t => !t.done);
+  const done = list.filter(t => t.done);
   const todayPending = pending.filter(t => t.due === todayStr);
-
-  document.getElementById('cnt-all').textContent     = list.length;
-  document.getElementById('cnt-today').textContent   = todayPending.length;
+  document.getElementById('cnt-all').textContent = list.length;
+  document.getElementById('cnt-today').textContent = todayPending.length;
   document.getElementById('cnt-pending').textContent = pending.length;
-  document.getElementById('cnt-done').textContent    = done.length;
-
+  document.getElementById('cnt-done').textContent = done.length;
   const pct = list.length ? Math.round(done.length / list.length * 100) : 0;
-  document.getElementById('progPct').textContent  = pct + '%';
+  document.getElementById('progPct').textContent = pct + '%';
   document.getElementById('progFill').style.width = pct + '%';
-
   let visible;
-  if      (currentFilter === 'all')     visible = list;
-  else if (currentFilter === 'today')   visible = todayPending.concat(done.filter(t => t.due === todayStr));
+  if (currentFilter === 'all') visible = list;
+  else if (currentFilter === 'today') visible = todayPending.concat(done.filter(t => t.due === todayStr));
   else if (currentFilter === 'pending') visible = pending;
-  else                                  visible = done;
-
+  else visible = done;
   const priOrder = { high: 0, mid: 1, low: 2 };
-
   const pendingV = visible.filter(t => !t.done).sort((a,b) => {
     const pa = priOrder[a.priority] ?? 2, pb = priOrder[b.priority] ?? 2;
     if (pa !== pb) return pa - pb;
@@ -477,34 +219,25 @@ function render() {
     if (a.due) return -1; if (b.due) return 1;
     return (a.createdAt||0) - (b.createdAt||0);
   });
-
   const doneV = visible.filter(t => t.done).sort((a,b) => (b.doneAt||0) - (a.doneAt||0));
-
   const wrap = document.getElementById('listWrap');
-
-  if (visible.length === 0) {
-    wrap.innerHTML = '<div class="empty"><div class="emoji">â</div>ã¿ã¹ã¯ãããã¾ãã</div>';
-    return;
-  }
-
+  if (visible.length === 0) { wrap.innerHTML = '<div class="empty"><div class="emoji">✅</div>タスクはありません</div>'; return; }
   let html = '';
-
   if (pendingV.length) {
-    html += `<div class="section-label">æªå®äº (${pendingV.length})</div><div class="todo-list">`;
+    html += `<div class="section-label">未完了 (${pendingV.length})</div><div class="todo-list">`;
     pendingV.forEach(t => { html += itemHTML(t, todayStr); });
     html += '</div>';
   }
-
   if (doneV.length) {
     html += `<div class="done-toggle" onclick="toggleDoneSection()">
-      <span id="doneArrow">${doneOpen ? 'â¼' : 'â¶'}</span> å®äºæ¸ã¿ (${doneV.length})
-      <button class="clear-done-btn" onclick="event.stopPropagation();clearDone()">ä¸æ¬åé¤</button>
+      <span id="doneArrow">${doneOpen ? '▼' : '▶'}</span>
+      完了済み (${doneV.length})
+      <button class="clear-done-btn" onclick="event.stopPropagation();clearDone()">一括削除</button>
     </div>
     <div class="todo-list" id="doneSect" style="display:${doneOpen ? '' : 'none'}">`;
     doneV.forEach(t => { html += itemHTML(t, todayStr); });
     html += '</div>';
   }
-
   wrap.innerHTML = html;
 }
 
@@ -513,12 +246,12 @@ function itemHTML(t, todayStr) {
   let dateHTML = '';
   if (t.due) {
     const ov = !t.done && t.due < todayStr;
-    const lb = t.due === todayStr ? 'ä»æ¥' : t.due;
-    dateHTML = `<span class="todo-date${ov?' overdue':''}">${ov?'â ï¸ ':'ð '}${lb}</span>`;
+    const lb = t.due === todayStr ? '今日' : t.due;
+    dateHTML = `<span class="todo-date${ov?' overdue':''}">${ov?'⚠️ ':'📅 '}${lb}</span>`;
   }
   return `<div class="todo-item${t.done?' done':''}">
     <div class="pri-dot ${priCls}"></div>
-    <div class="chk-btn" onclick="toggleDone('${t.id}')">${t.done?'â':''}</div>
+    <div class="chk-btn" onclick="toggleDone('${t.id}')">${t.done?'✓':''}</div>
     <div class="todo-body">
       <div class="todo-text">${esc(t.text)}</div>
       <div class="todo-meta">
@@ -527,18 +260,12 @@ function itemHTML(t, todayStr) {
       </div>
       ${t.memo ? `<div class="todo-memo">${esc(t.memo)}</div>` : ''}
     </div>
-    <button class="del-btn" onclick="deleteTask('${t.id}')">Ã</button>
+    <button class="del-btn" onclick="deleteTask('${t.id}')">×</button>
   </div>`;
 }
 
-function esc(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-document.getElementById('newTask').addEventListener('keydown', e => {
-  if (e.key === 'Enter') window.addTask();
-});
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+document.getElementById('newTask').addEventListener('keydown', e => { if (e.key === 'Enter') window.addTask(); });
 </script>
-
 </body>
 </html>
